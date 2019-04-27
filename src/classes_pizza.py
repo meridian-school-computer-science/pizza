@@ -17,18 +17,31 @@ class Pizza:
         return f"Pizza({self.name})"
 
     def __str__(self):
-        return f"{self.name} - ${self.cost:.2f}"
+        return f"{self.name}"
 
     def get_cost(self):
         return self.cost
 
 
-class PizzaElement(Pizza):
+class PizzaType(Pizza):
 
     def __init__(self, name, cost):
         super().__init__(name, cost)
 
+
+class PizzaElement(Pizza):
+
+    def __init__(self, name, cost, pizza):
+        super().__init__(name, cost)
+        self.decorate = pizza
+
     def get_cost(self):
+        return self.cost + self.decorate.get_cost()
 
+    def __str__(self):
+        return self.decorate.__str__() + f" + {self.name}"
 
+    @property
+    def show_cost(self):
+        return f" ${self.get_cost():.2f}"
 
