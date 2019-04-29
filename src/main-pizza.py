@@ -1,6 +1,7 @@
 from src.classes_pizza import PizzaType, PizzaElement
 from src.pizza_factory import PizzaFactory
 
+print('\nTesting decorator pattern')
 cheese = PizzaType('Cheese', 7.99)
 
 print(cheese)
@@ -12,7 +13,7 @@ print(gluten_free, gluten_free.show_cost)
 
 
 # Now try with a beginning factory
-print('With factory')
+print('\nWith factory pattern')
 kitchen = PizzaFactory()
 order = {'base': 'cheese',
          'add': 'extra cheese',
