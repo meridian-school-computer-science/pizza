@@ -10,9 +10,7 @@ class PizzaFactory(Pizza):
             'sausage': 8.99,
             'vegetarian': 8.99,
             'combination': 9.99,
-            'extra': .3,
-            'remove': -.25,
-            'gf': 3.99
+            'special': 7.99
         }
         self.names = {
             'cheese': 'Cheese',
