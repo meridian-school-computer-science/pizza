@@ -34,7 +34,7 @@ class PizzaFactory(Pizza):
             'medium': 0,
             'large': 1.99
         }
-        self.adds = {
+        self.add = {
             'extra cheese': 'Extra Cheese',
             'extra veggies': 'Extra Veggies',
             'onions': 'Onions',
@@ -43,13 +43,28 @@ class PizzaFactory(Pizza):
             'double meat': 'Double Meat',
             'banana peppers': 'Banana Peppers'
         }
+        self.add_costs ={
+            'extra cheese': .5,
+            'extra veggies': .4,
+            'onions': .25,
+            'olives': .25,
+            'extra sauce': .3,
+            'double meat': .5,
+            'banana peppers': .25
+        }
         self.remove = {
             'cheese': 'hold Cheese',
             'onions': 'hold Onions',
             'olives': 'hold Olives',
             'sauce': 'hold Sauce',
-            'meat': 'hold Meat',
             'peppers': 'hold Peppers'
+        }
+        self.remove_save = {
+            'cheese': .25,
+            'onions': .25,
+            'olives': .25,
+            'sauce': .25,
+            'peppers': .25
         }
         self.crusts = {
             'thin': 'Thin Crust',
@@ -72,18 +87,24 @@ class PizzaFactory(Pizza):
         base_name = description['base']
         size = description['size']
         crust = description['crust']
+        adds = description['add']
+        removes = description['remove']
 
         # start the building with a base
         the_base_pizza = PizzaType(self.names[base_name], self.costs[base_name])
         # then add the size
         the_sized_pizza = PizzaElement(self.sizes[size], self.size_costs[size], the_base_pizza)
         # then add the crust choice
-        pizza_with_crust = PizzaElement(self.crusts[crust], self.crusts_costs[crust], the_sized_pizza)
+        the_finished_pizza = PizzaElement(self.crusts[crust], self.crusts_costs[crust], the_sized_pizza)
 
-        # this part needs work with a loop for other adds
-        #   decorated_pizza = PizzaElement('Extra Cheese', self.costs['extra'], pizza_with_crust)
+        if adds != ['']:
+            for each_add in adds:
+                the_finished_pizza = PizzaElement(self.add[each_add], self.add_costs[each_add], the_finished_pizza)
 
-        the_finished_pizza = pizza_with_crust
+        if removes != ['']:
+            for each_remove in removes:
+                the_finished_pizza = PizzaElement(self.remove[each_remove], self.remove_save[each_remove], the_finished_pizza)
+
 
         return the_finished_pizza
 
