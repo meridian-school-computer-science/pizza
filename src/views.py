@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from src.constants_file import *
 from tkinter import Menu
 from tkinter import scrolledtext
 from tkinter import Spinbox
@@ -19,14 +20,17 @@ class View(tk.Tk):
         self.win = tk.Tk()
         self.win.title('Pizza App')
         self.win.geometry('700x450+200+200')
+        self.base_choices = tk.StringVar
         self.create_frames()
         self.create_tabs()
+
+
 
     def create_frames(self):
         """ all of the widgets for our view
         """
         # frames
-        self.container = ttk.Frame(self)
+        self.container = ttk.Frame(self.win)
         self.container.grid(column=0, row=0)
         self.left_frame = ttk.Frame(self.container)
         self.left_frame.grid(column=0, row=0, padx=20,sticky=tk.E+tk.W)
@@ -34,12 +38,19 @@ class View(tk.Tk):
         self.right_frame.grid(column=1, row=0, padx=20,sticky=tk.E+tk.W)
 
     def create_tabs(self):
-        self.tab_control = ttk.Notebook(parent)
+        self.tab_control = ttk.Notebook(self.left_frame)
         self.pizza_tab = ttk.Frame(self.tab_control)
-        self.tab_control.add(self.pizza_tab, 'Pizza')
+        self.tab_control.add(self.pizza_tab, text='Pizza')
         self.drink_tab = ttk.Frame(self.tab_control)
-        self.tab_control.add(self.drink_tab, 'Drinks')
+        self.tab_control.add(self.drink_tab, text='Drinks')
         self.tab_control.pack(expand=1, fill="both")
+
+    def build_pizza_tab(self):
+        # add pizza_tab widgets here
+        self.base_pizza = ttk.Combobox(self.pizza_tab, width=12, textvariable=self.base_choices)
+        self.base_pizza['values'] = ('Cheese', 'Pepperoni')
+        self.base_pizza.current(0)
+        self.base_pizza.grid(column=0, row=0)
 
     def start_view(self):
         self.win.mainloop()
@@ -74,3 +85,11 @@ class ToolTip(object):
         self.tipwindow = None
         if tw:
             tw.destroy()
+
+
+def main():
+    test = View()
+    test.start_view()
+
+if __name__ == '__main__':
+    main()
