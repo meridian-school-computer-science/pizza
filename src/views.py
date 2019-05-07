@@ -18,9 +18,10 @@ class View(tk.Tk):
         self.win = tk.Tk()
         self.win.title('Pizza App')
         self.win.geometry('700x450+200+200')
-        self.create_widgets()
+        self.create_frames()
+        self.create_tabs()
 
-    def create_widgets(self):
+    def create_frames(self):
         """ all of the widgets for our view
         """
         # frames
@@ -31,21 +32,16 @@ class View(tk.Tk):
         self.right_frame = ttk.Frame(self.container)
         self.right_frame.grid(column=1, row=0, padx=20,sticky=tk.E+tk.W)
 
-
-
+    def create_tabs(self):
+        self.tab_control = ttk.Notebook(parent)
+        self.pizza_tab = ttk.Frame(self.tab_control)
+        self.tab_control.add(self.pizza_tab, 'Pizza')
+        self.drink_tab = ttk.Frame(self.tab_control)
+        self.tab_control.add(self.drink_tab, 'Drinks')
+        self.tab_control.pack(expand=1, fill="both")
 
     def start_view(self):
         self.win.mainloop()
-
-
-class aTabControl(ttk.Notebook):
-
-    def __init__(self, parent, display_text):
-        ttk.Notebook.__init__(self, *args, **kwargs)
-        self.tab_control = ttk.Notebook(parent)
-        self.tab_frame = ttk.Frame(self.tab_control)
-        self.tab_control.add(self.tab_frame, text=display_text)
-        self.tab_control.grid(column=0, row=0)
 
 
 class ToolTip(object):
