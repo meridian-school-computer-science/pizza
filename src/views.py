@@ -1,86 +1,81 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import Menu
+from tkinter import scrolledtext
+from tkinter import Spinbox
+from operator import attrgetter
 
 
 LARGE_FONT= ("Verdana", 12)
 
 
-class ExApp(tk.Tk):
+class View(tk.Tk):
 
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         # Container
-        container = tk.Frame(self)
-        container.pack(side="top", fill="both", expand=True)
-        container.grid_rowconfigure(0, weight=1)
-        container.grid_columnconfigure(0, weight=1)
 
+        self.win = tk.Tk()
+        self.win.title('Pizza App')
+        self.win.geometry('700x450+200+200')
+        self.create_widgets()
+
+    def create_widgets(self):
+        """ all of the widgets for our view
+        """
         # frames
-
-        self.frames = {}
-        for each_frame in (StartPage, PageOne, PageTwo):
-            frame = each_frame(container, self)
-            self.frames[each_frame] = frame
-            frame.grid(row=0, column=0, sticky="nsew")
-
-        # show frame of the start page
-        self.show_frame(StartPage)
-
-    def show_frame(self, a_container):
-        frame = self.frames[a_container]
-        frame.tkraise()
+        self.container = ttk.Frame(self)
+        self.container.grid(column=0, row=0)
+        self.left_frame = ttk.Frame(self.container)
+        self.left_frame.grid(column=0, row=0, padx=20,sticky=tk.E+tk.W)
+        self.right_frame = ttk.Frame(self.container)
+        self.right_frame.grid(column=1, row=0, padx=20,sticky=tk.E+tk.W)
 
 
-def qf(quick_print):
-    print(quick_print)
 
 
-class StartPage(tk.Frame):
-
-    def __init__(self, parent, controller):
-        ttk.Frame.__init__(self, parent)
-        label = ttk.Label(self, text="Start Page", font=LARGE_FONT)
-        label.pack(pady=10, padx=10)
-
-        button1 = ttk.Button(self, text="Visit Page 1",
-                           command=lambda: controller.show_frame(PageOne))
-        button1.pack()
-
-        button2 = ttk.Button(self, text="Go to Page One",
-                           command=lambda: controller.show_frame(PageOne))
-        button2.pack()
-
-class PageOne(tk.Frame):
-
-    def __init__(self, parent, controller):
-        ttk.Frame.__init__(self, parent)
-        label = ttk.Label(self, text="Page One", font=LARGE_FONT)
-        label.pack(pady=10, padx=10)
-
-        button = ttk.Button(self, text="Back to Start",
-                           command=lambda: controller.show_frame(StartPage))
-        button.pack()
-        button2 = ttk.Button(self, text="Go to Page Two",
-                           command=lambda: controller.show_frame(PageTwo))
-        button2.pack()
+    def start_view(self):
+        self.win.mainloop()
 
 
-class PageTwo(tk.Frame):
+class aTabControl(ttk.Notebook):
 
-    def __init__(self, parent, controller):
-        ttk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="Page Two", font=LARGE_FONT)
-        label.pack(pady=10, padx=10)
-
-        button1 = ttk.Button(self, text="Back to Start",
-                           command=lambda: controller.show_frame(StartPage))
-        button1.pack()
-
-        button2 = ttk.Button(self, text="Go to Page One",
-                           command=lambda: controller.show_frame(PageOne))
-        button2.pack()
+    def __init__(self, parent, display_text):
+        ttk.Notebook.__init__(self, *args, **kwargs)
+        self.tab_control = ttk.Notebook(parent)
+        self.tab_frame = ttk.Frame(self.tab_control)
+        self.tab_control.add(self.tab_frame, text=display_text)
+        self.tab_control.grid(column=0, row=0)
 
 
-root = ExApp()
+class ToolTip(object):
+    def __init__(self, widget):
+        self.widget = widget
+        self.tipwindow = None
+        self.id = None
+        self.x = self.y = 0
 
-root.mainloop()
+    def showtip(self, text):
+        "Display text in tooltip window"
+        self.text = text
+        if self.tipwindow or not self.text:
+            return
+        x, y, _cx, cy = self.widget.bbox("insert")
+        x = x + self.widget.winfo_rootx() + 27
+        y = y + cy + self.widget.winfo_rooty() +27
+        self.tipwindow = tw = tk.Toplevel(self.widget)
+        tw.wm_overrideredirect(1)
+        tw.wm_geometry("+%d+%d" % (x, y))
+
+        label = tk.Label(tw, text=self.text, justify=tk.LEFT,
+                      background="#ffffe0", relief=tk.SOLID, borderwidth=1,
+                      font=("tahoma", "8", "normal"))
+        label.pack(ipadx=1)
+
+    def hidetip(self):
+        tw = self.tipwindow
+        self.tipwindow = None
+        if tw:
+            tw.destroy()
+
+
